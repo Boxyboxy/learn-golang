@@ -14,7 +14,7 @@ func main() {
 
 	echo3()
 
-	fmt.Println(os.Args[1:])
+	fmt.Println(os.Args[1:]) // for debugging purposes, display values of arrays
 }
 
 func echo1() {
