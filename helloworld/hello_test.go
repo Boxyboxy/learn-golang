@@ -11,6 +11,15 @@ func TestHello(t *testing.T) {
 	}
 }
 
+func TestHelloName(t *testing.T) {
+	got := HelloName("Chris")
+	want := "Hello, Chris"
+
+	if got != want {
+		t.Errorf("got %q want %q", got, want) // %q prints the value as double-quoted string
+	}
+}
+
 // go mod init hello
 // create go.mod file
 // This file tells go tools essential information about my code
@@ -21,3 +30,5 @@ func TestHello(t *testing.T) {
 3. test function takes one argument only t *testing.T
 4. Need to import "testing"
 */
+
+// go test -v
