@@ -20,7 +20,7 @@ const (
 
 type DictionaryErr string
 
-func (e DictionaryErr) Error() string {
+func (e DictionaryErr) Error() string { // By implementing the Error() method, this custom Err type automatically satisfies the error interface
 	return string(e)
 }
 
