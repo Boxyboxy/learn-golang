@@ -38,3 +38,23 @@ func main() {
 	sleeper := &ConfigurableSleeper{1 * time.Second, time.Sleep}
 	Countdown(os.Stdout, sleeper)
 }
+
+/*
+
+Try to make it so your tests are testing useful behaviour unless the implementation is really important to how the system runs.
+
+Some principles/though processes and rule to follow for mocking:
+The definition of refactoring is that the code changes but the behaviour stays the same. If you have decided to do some refactoring in theory you should be able to make the commit without any test changes.
+So when writing a test ask yourself:
+1. Am I testing the behaviour I want, or the implementation details?
+2. If I were to refactor this code, would I have to make lots of changes to the tests?
+
+Although Go lets you test private functions, I would avoid it as private functions are implementation detail to support public behaviour.
+Test the public behaviour. Sandi Metz describes private functions as being "less stable" and you don't want to couple your tests to them.
+
+I feel like if a test is working with MORE THAN 3 MOCKS THEN IT IS A RED FLAG - time for a rethink on the design
+
+Use spies with caution. Spies let you see the insides of the algorithm you are writing which can be very useful
+but that MEANS A TIGHTER COUPLING BETWEEN TEST CODE AND IMPLEMENTATION coupling between your test code and the implementation.
+Be sure you actually care about these details if you're going to spy on them
+*/
