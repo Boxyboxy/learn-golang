@@ -51,7 +51,7 @@ type Store interface {
 
 func Server(store Store) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		data, err := store.Fetch(r.Context())
+		data, err := store.Fetch(r.Context()) //request.Context() is a default method for every http.Request object
 
 		if err != nil {
 			return //todo: log error however you like
