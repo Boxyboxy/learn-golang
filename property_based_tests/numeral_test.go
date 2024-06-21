@@ -88,3 +88,40 @@ func TestPropertiesOfConversion(t *testing.T) {
 		t.Error("failed checks", err)
 	}
 }
+
+/*
+In this code, the property-based test is `TestPropertiesOfConversion`. Let's break down why this is a property-based test:
+
+1. Use of `quick.Check`:
+   The function uses `quick.Check` from the `testing/quick` package, which is Go's built-in tool for property-based testing.
+
+2. Property definition:
+   The `assertion` function defines a property that should hold true for all valid inputs:
+   ```go
+   assertion := func(arabic uint16) bool {
+       if arabic > 3999 {
+           return true
+       }
+       roman := ConvertToRoman(arabic)
+       fromRoman := ConvertToArabic(roman)
+       return fromRoman == arabic
+   }
+   ```
+   This property states that converting an Arabic number to Roman and back should result in the original number.
+
+3. Random input generation:
+   `quick.Check` automatically generates random inputs (in this case, `uint16` values) to test the property.
+
+4. Multiple test cases:
+   The test runs the property check multiple times (up to 1000 times, as specified in the config) with different random inputs.
+
+5. Failure reporting:
+   If the property fails for any input, `quick.Check` will return an error, which is then reported by the test.
+
+6. Input constraints:
+   The test handles the constraint that Roman numerals typically don't go above 3999 by simply returning true for larger values.
+
+This test is checking a fundamental property of the conversion functions: that they are inverse operations of each other. It's testing this property across a wide range of inputs, potentially uncovering edge cases or inconsistencies that might be missed in traditional unit tests.
+
+The other test functions (`TestRomanNumerals` and `TestConvertingToArabic`) are examples of table-driven tests, which are different from property-based tests. They check specific input-output pairs rather than general properties of the functions.
+*/
