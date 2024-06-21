@@ -19,8 +19,9 @@ import (
 		return b
 	}
 
-	func measureReponseTime(url string) time.Duration {
-		start := time.Now()
+func measureReponseTime(url string) time.Duration {
+start := time.Now()
+
 		http.Get(url)
 		return time.Since(start)
 	}
