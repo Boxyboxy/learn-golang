@@ -19,7 +19,7 @@ func AssertFalse(t *testing.T, got bool) {
 // to write generic functions in go, you need to provide type parameters which is just a fancy way of saying
 // decsribe your generic type and give it a label
 // type of our type parameter is comparable
-// we're using comparable because we want to describe to the compilaer that we wish to sue the == and != operators
+// we're using comparable because we want to describe to the compiler that we wish to sue the == and != operators
 // on things of type T
 func AssertEqual[T comparable](t *testing.T, got, want T) {
 	t.Helper()
