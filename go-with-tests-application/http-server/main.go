@@ -19,7 +19,7 @@ func main() {
 	// handler:= http.HandlerFunc(PlayerServer) // type casting our Player Server function with it, we have no implemented the required Handler
 	// log.Fatal(http.ListenAndServe(":5000", handler))
 	store := NewInMemoryPlayerStore()
-	server := &PlayerServer{store} //won't compile without a store
+	server := NewPlayerServer(store) //won't compile without a store
 	log.Fatal(http.ListenAndServe(":5000", server))
 }
 
