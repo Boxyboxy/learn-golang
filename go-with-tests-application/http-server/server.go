@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -9,6 +10,7 @@ import (
 type PlayerStore interface {
 	GetPlayerScore(name string) int
 	RecordWin(name string)
+	GetLeague() []Player
 }
 
 type PlayerServer struct {
@@ -29,10 +31,15 @@ func NewPlayerServer(store PlayerStore)  *PlayerServer{
 }
 
 
+const jsonContentType = "application/json"
+
 
 func (p *PlayerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", jsonContentType)
+	// to create an encoder, you need an io.writer which is what http.ResponseWriter implements
+	json.NewEncoder(w).Encode(p.store.GetLeague()) // this automatically sets HTTP status to 200 OK
 }
+
 
 func (p *PlayerServer) playersHandler(w http.ResponseWriter, r *http.Request){
 	player := strings.TrimPrefix(r.URL.Path, "/players/")
@@ -56,4 +63,9 @@ func (p *PlayerServer) showScore(w http.ResponseWriter, player string) {
 func (p *PlayerServer) processWin(w http.ResponseWriter, player string) {
 	p.store.RecordWin(player)
 	w.WriteHeader(http.StatusAccepted) 
+}
+
+type Player struct{
+	Name string
+	Wins int
 }
