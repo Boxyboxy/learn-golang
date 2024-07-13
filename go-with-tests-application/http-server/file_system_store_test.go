@@ -13,9 +13,10 @@ func TestFileSystemStore(t *testing.T) {
 			{"name": "Cleo", "wins": 10},
 			{"name": "Chris", "wins": 33}
 		]`)
-		defer cleanDatabase() // ensure that a funciton call is performed later in a program's executioni, usually for purpose of clean up
+		defer cleanDatabase() // ensure that a function call is performed later in a program's executioni, usually for purpose of clean up
 
-		store := FileSystemPlayerStore{ database}
+		store, err := NewFileSystemPlayerStore( database.(*os.File))
+		assertNoError(t, err)
 		got := store.GetLeague()
 		want := []Player{
 			{"Cleo", 10},
@@ -37,14 +38,41 @@ func TestFileSystemStore(t *testing.T) {
 			{"name": "Cleo", "wins": 10},
 			{"name": "Chris", "wins": 33}
 		]`)
-		defer cleanDatabase() // ensure that a funciton call is performed later in a program's executioni, usually for purpose of clean up
+		defer cleanDatabase() // ensure that a function call is performed later in a program's executioni, usually for purpose of clean up
 
-		store := FileSystemPlayerStore{ database}
+		store, err:= NewFileSystemPlayerStore(database.(*os.File))
+		assertNoError(t, err)
+
 		store.RecordWin("Chris")
 
 		got := store.GetPlayerScore("Chris")
 		want := 34
 		assertScoreEquals(t, got, want)
+	})
+
+	//file_system_store_test.go
+	t.Run("store wins for new players", func(t *testing.T) {
+		database, cleanDatabase := createTempFile(t, `[
+			{"Name": "Cleo", "Wins": 10},
+			{"Name": "Chris", "Wins": 33}]`)
+		defer cleanDatabase()
+
+		store, err := NewFileSystemPlayerStore(database.(*os.File))
+
+		assertNoError(t, err)
+		store.RecordWin("Pepper")
+
+		got := store.GetPlayerScore("Pepper")
+		want := 1
+		assertScoreEquals(t, got, want)
+	})
+
+	t.Run("works with an empty file", func(t *testing.T){
+		database, cleanDatabase := createTempFile(t, "")
+		defer cleanDatabase()
+
+		_, err := NewFileSystemPlayerStore(database.(*os.File))
+		assertNoError(t, err)
 	})
 }
 
@@ -77,3 +105,10 @@ func assertScoreEquals(t *testing.T, got, want int) {
 	}
 }
 
+
+func assertNoError(t *testing.T, err error) {
+	t.Helper()
+	if err!=nil {
+		t.Fatalf("didn't expect an error but got one, %v", err)
+	}
+}
